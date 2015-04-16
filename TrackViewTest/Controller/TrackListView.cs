@@ -146,7 +146,7 @@ namespace TrackViewTest.Controller
                 Console.Write("xPos: " + xPos + " ");
                 Console.WriteLine("Moved: " + (e.X - xPos));
             }
-            //pb.Refresh();
+            pb.Refresh();
         }
     }
 }
