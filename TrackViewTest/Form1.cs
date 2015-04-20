@@ -13,6 +13,8 @@ namespace TrackViewTest
         private readonly ProjectorView projectorView = new ProjectorView();
         private bool Dragging = false;
 
+        private TreeNode selectedNode;
+
         public Form1()
         {
             InitializeComponent();
@@ -49,7 +51,7 @@ namespace TrackViewTest
                 var node = new TreeNode(track.Name);
                 foreach (var prj in track.projectorList)
                 {
-                    TreeNode prjNode = new TreeNode(prj.Name + prj.id);
+                    TreeNode prjNode = new TreeNode(prj.Name);
                     node.Nodes.Add(prjNode);    
                 }
                 prjTreeNodes.Add(node);
@@ -154,32 +156,103 @@ namespace TrackViewTest
 
         private void btn_AddPrj_Click(object sender, EventArgs e)
         {
-            var prjList = trackListView.trackList[1].projectorList; 
-            var id = prjList.Count+1;
-            var newPrj = new Projector(id, "new");
+            //var prjList = trackListView.trackList[1].projectorList; 
+            //var id = prjList.Count+1;
+            //var newPrj = new Projector(id, "projector"+id);
             
-            prjList.Add(newPrj);
+            //prjList.Add(newPrj);
 
-            UpdatePrjTreeView(trackListView.trackList);
-            pbProjector.Invalidate();
+            //UpdatePrjTreeView(trackListView.trackList);
+            //pbProjector.Invalidate();
         }
 
         private void pbProjector_Paint(object sender, PaintEventArgs e)
         {
             var pb = (PictureBox)sender;
             var g = e.Graphics;
-            
+            string node;
+            try{
+                node = selectedNode.Text;
+            }
+            catch(Exception ex){
+                node = "Track 1"; 
+            }
+                
+            for(int i = 0; i < trackListView.trackList.Count; i++) {
+                if (node.Equals(trackListView.trackList[i].Name)){
+                    trackListView.selectedTrack = trackListView.trackList[i];
+                }
+            }
+            var prjList = trackListView.selectedTrack.projectorList;
+            projectorView.DrawLayout(pb, prjList, g);
         }
 
-        private void tv_Projector_MouseDown(object sender, MouseEventArgs e)
+        private void tv_Projector_MouseUp(object sender, MouseEventArgs e)
         {
-            tv_Projector.SelectedNode = tv_Projector.GetNodeAt(e.X, e.Y);
+            Point p = new Point(e.X, e.Y);
+            TreeNode node = tv_Projector.GetNodeAt(p);
             if (e.Button == MouseButtons.Right)
             {
-                ContextMenu tv_PrjMenu = new ContextMenu();
+                if (node != null)
+                {
+                    tv_Projector.SelectedNode = selectedNode = node;
+                    var lNode = node.Text.ToLower();
+                    if(lNode.Contains("track")){
+                        cms_tvTrack.Show(tv_Projector, p);
+                    }
+                    else if (lNode.Contains("projector"))
+                    {
+                        cms_tvPrj.Show(tv_Projector, p);
+                    }
+                       
+                }
+            }
+            else
+            {
+                tv_Projector.SelectedNode = selectedNode = node;
+                pbProjector.Invalidate();
             }
         }
 
-     
-    }
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var node = selectedNode.Text;
+            for(int i = 0; i < trackListView.trackList.Count; i++) {
+                if (node.Equals(trackListView.trackList[i].Name)){
+                    trackListView.selectedTrack = trackListView.trackList[i];
+                }
+            }
+            var prjList = trackListView.selectedTrack.projectorList;
+            var id = prjList.Count + 1;
+            var newPrj = new Projector(id, "projector"+id);
+            Console.WriteLine("id: " + id);
+            prjList.Add(newPrj);
+            Console.WriteLine("addToolStripMenu: " + newPrj.Name);
+            UpdatePrjTreeView(trackListView.trackList);
+            pbProjector.Invalidate(); 
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var pNode = selectedNode.Parent.Text;
+            var node = selectedNode.Text;
+            Console.WriteLine(node);
+            for (int i = 0; i < trackListView.trackList.Count; i++)
+            {
+                if (pNode.Equals(trackListView.trackList[i].Name))
+                {
+                    for (int j = 0; j < trackListView.trackList[i].projectorList.Count; j++)
+                    {
+                        if (node.Equals(trackListView.trackList[i].projectorList[j].Name))
+                        {
+                            trackListView.trackList[i].projectorList.Remove(trackListView.trackList[i].projectorList[j]);
+                        }
+                    }
+                }
+            }
+            UpdatePrjTreeView(trackListView.trackList);
+            pbProjector.Invalidate();
+        }
+
+      }
 }
