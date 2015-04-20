@@ -204,17 +204,6 @@
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // btn_AddPrj
-            // 
-            this.btn_AddPrj.Location = new System.Drawing.Point(246, 460);
-            this.btn_AddPrj.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btn_AddPrj.Name = "btn_AddPrj";
-            this.btn_AddPrj.Size = new System.Drawing.Size(86, 29);
-            this.btn_AddPrj.TabIndex = 7;
-            this.btn_AddPrj.Text = "Add";
-            this.btn_AddPrj.UseVisualStyleBackColor = true;
-            this.btn_AddPrj.Click += new System.EventHandler(this.btn_AddPrj_Click);
-            // 
             // btn_View
             // 
             this.btn_View.Location = new System.Drawing.Point(246, 580);

@@ -154,17 +154,6 @@ namespace TrackViewTest
             }
         }
 
-        private void btn_AddPrj_Click(object sender, EventArgs e)
-        {
-            //var prjList = trackListView.trackList[1].projectorList; 
-            //var id = prjList.Count+1;
-            //var newPrj = new Projector(id, "projector"+id);
-            
-            //prjList.Add(newPrj);
-
-            //UpdatePrjTreeView(trackListView.trackList);
-            //pbProjector.Invalidate();
-        }
 
         private void pbProjector_Paint(object sender, PaintEventArgs e)
         {
